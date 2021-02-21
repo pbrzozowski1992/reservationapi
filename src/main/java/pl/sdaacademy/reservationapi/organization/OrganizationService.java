@@ -2,9 +2,10 @@ package pl.sdaacademy.reservationapi.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.sdaacademy.reservationapi.organization.exception.NoOrganizationFoundException;
+import pl.sdaacademy.reservationapi.organization.exception.OrganizationAlreadyExistsException;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class OrganizationService {
@@ -17,17 +18,18 @@ public class OrganizationService {
     }
 
     public Organization addOrganization(Organization organization) {
-        organizationRepository.findById(organization.getName())
-                .ifPresent(org->{
-                    throw new IllegalArgumentException("organization with provided name already exists!");
+        final String organizationName = organization.getName();
+        organizationRepository.findById(organizationName)
+                .ifPresent(org -> {
+                    throw new OrganizationAlreadyExistsException(organizationName);
                 });
         return organizationRepository.save(organization);
     }
 
     public Organization removeOrganization(String id) {
         Organization organization = organizationRepository.findById(id)
-                .orElseThrow(()->{
-                    throw new NoSuchElementException("no organization found!");
+                .orElseThrow(() -> {
+                    throw new NoOrganizationFoundException(id);
                 });
         organizationRepository.delete(organization);
         return organization;

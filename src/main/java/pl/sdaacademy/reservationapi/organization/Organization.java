@@ -10,7 +10,8 @@ public class Organization {
     private String name;
     private String description;
 
-    public Organization() {}
+    public Organization() {
+    }
 
     public Organization(String name, String description) {
         this.name = name;
