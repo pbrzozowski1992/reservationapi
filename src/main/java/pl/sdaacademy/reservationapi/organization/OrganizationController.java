@@ -19,15 +19,23 @@ public class OrganizationController {
         return organizationService.getAllOrganizations();
     }
 
+    @GetMapping("/{id}")
+    public Organization getOrganizationById(@PathVariable String id) {
+        return organizationService.getOrganizationById(id);
+    }
+
     @PostMapping
     public Organization addOrganization(@RequestBody Organization organization) {
         return organizationService.addOrganization(organization);
     }
 
-    //@RequestParam -> parametr żądania: localhost:8080/organizations?id=Intive: filtrowanie, sortowanie, paginacja
-    //@PathVariable -> parametr ścieżki: localhost:8080/organizations/Intive: do zwracania unikalnego elementu z zbioru
     @DeleteMapping("/{id}")
     public Organization removeOrganization(@PathVariable String id) {
         return organizationService.removeOrganization(id);
+    }
+
+    @PutMapping("/{id}")
+    public Organization updateOrganization(@PathVariable String id, @RequestBody Organization organization) {
+        return organizationService.updateOrganization(id, organization);
     }
 }

@@ -35,6 +35,25 @@ public class OrganizationService {
         return organization;
     }
 
+    public Organization updateOrganization(String id, Organization organizationUpdate) {
+        Organization organizationToUpdate = organizationRepository.findById(id)
+                .orElseThrow(() -> {
+                    throw new NoOrganizationFoundException(id);
+                });
+        String newOrganizationDescription = organizationUpdate.getDescription();
+        if (newOrganizationDescription != null) {
+            organizationToUpdate.setDescription(newOrganizationDescription);
+        }
+        return organizationRepository.save(organizationToUpdate);
+    }
+
+    public Organization getOrganizationById(String id) {
+        return organizationRepository.findById(id)
+                .orElseThrow(() -> {
+                    throw new NoOrganizationFoundException(id);
+                });
+    }
+
     public List<Organization> getAllOrganizations() {
         return organizationRepository.findAll();
     }
