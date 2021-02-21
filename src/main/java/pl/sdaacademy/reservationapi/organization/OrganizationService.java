@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class OrganizationService {
@@ -16,15 +17,20 @@ public class OrganizationService {
     }
 
     public Organization addOrganization(Organization organization) {
-        //sprawdzić czy organizacja jest już w repo
-        organizationRepository.findAll()
-                .stream()
-                .filter(org -> org.getName().equals(organization.getName()))
-                .findAny()
+        organizationRepository.findById(organization.getName())
                 .ifPresent(org->{
                     throw new IllegalArgumentException("organization with provided name already exists!");
                 });
         return organizationRepository.save(organization);
+    }
+
+    public Organization removeOrganization(String id) {
+        Organization organization = organizationRepository.findById(id)
+                .orElseThrow(()->{
+                    throw new NoSuchElementException("no organization found!");
+                });
+        organizationRepository.delete(organization);
+        return organization;
     }
 
     public List<Organization> getAllOrganizations() {

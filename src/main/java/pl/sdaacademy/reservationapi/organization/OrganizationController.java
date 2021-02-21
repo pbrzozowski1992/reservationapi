@@ -23,4 +23,11 @@ public class OrganizationController {
     public Organization addOrganization(@RequestBody Organization organization) {
         return organizationService.addOrganization(organization);
     }
+
+    //@RequestParam -> parametr żądania: localhost:8080/organizations?id=Intive: filtrowanie, sortowanie, paginacja
+    //@PathVariable -> parametr ścieżki: localhost:8080/organizations/Intive: do zwracania unikalnego elementu z zbioru
+    @DeleteMapping("/{id}")
+    public Organization removeOrganization(@PathVariable String id) {
+        return organizationService.removeOrganization(id);
+    }
 }
