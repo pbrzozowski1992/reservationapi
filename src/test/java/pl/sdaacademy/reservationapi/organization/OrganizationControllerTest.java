@@ -16,8 +16,7 @@ import java.util.Arrays;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -113,5 +112,65 @@ class OrganizationControllerTest {
                 .content("{\"name\":\"org_to_add\",\"description\":\"org_to_add description\"}")
         ).andExpect(status().is4xxClientError())
                 .andExpect(content().string("Organization with provided id: org_to_add already exists!"));
+    }
+
+    @Test
+    void when_send_delete_request_to_remove_organization_which_already_exist_in_system_then_organization_should_be_removed() throws Exception {
+        //given
+        String organizationId = "org_to_delete";
+        Organization organization = new Organization(organizationId, "organization to delete description");
+        Mockito.when(organizationService.removeOrganization(organizationId)).thenReturn(organization);
+
+        //when
+        //then
+        mockMvc.perform(
+                delete("/organizations/org_to_delete").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(jsonPath("$.name", equalTo("org_to_delete")))
+                .andExpect(jsonPath("$.description", equalTo("organization to delete description")));
+    }
+
+    @Test
+    void when_send_delete_request_to_remove_organization_which_not_exist_in_system_then_organization_not_found_exception_should_be_thrown() throws Exception {
+        //given
+        String organizationId = "org_to_delete";
+        Mockito.when(organizationService.removeOrganization(organizationId)).thenThrow(new NoOrganizationFoundException(organizationId));
+
+        //when
+        //then
+        mockMvc.perform(
+                delete("/organizations/org_to_delete").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().is4xxClientError())
+                .andExpect(content().string("No organization with id: org_to_delete found!"));
+    }
+
+    @Test
+    void when_send_put_request_to_update_organization_which_already_exist_in_system_then_organization_should_be_updated() throws Exception {
+        //given
+        Organization organizationToUpdate = new Organization(null, "new organization desc");
+        Mockito.when(organizationService.updateOrganization("org1", organizationToUpdate)).thenReturn(
+                new Organization("org1", "new organization desc"));
+
+        //when
+        //then             ssdsdssdsdsds
+        mockMvc.perform(
+                put("/organizations/org1").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"description\":\"new organization desc\"}")
+        ).andExpect(jsonPath("$.name", equalTo("org1")))
+        .andExpect(jsonPath("$.description", equalTo("new organization desc")));
+    }
+
+    @Test
+    void when_send_put_request_to_update_organization_which_is_not_exist_in_system_then_organization_not_found_exception_should_be_thrown() throws Exception {
+        //given
+        Organization organizationToUpdate = new Organization(null, "new organization desc");
+        Mockito.when(organizationService.updateOrganization("org1", organizationToUpdate)).thenThrow(new NoOrganizationFoundException("org1"));
+
+        //when
+        //then
+        mockMvc.perform(
+                put("/organizations/org1").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"description\":\"new organization desc\"}")
+        ).andExpect(status().is4xxClientError())
+                .andExpect(content().string("No organization with id: org1 found!"));
     }
 }
