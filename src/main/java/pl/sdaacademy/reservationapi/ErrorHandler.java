@@ -10,13 +10,13 @@ import pl.sdaacademy.reservationapi.organization.exception.OrganizationAlreadyEx
 @ControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(value = NoOrganizationFoundException.class)
-    public ResponseEntity<Object> handleNoOrganizationFoundException(NoOrganizationFoundException e) {
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<Object> handleNoOrganizationFoundException(IllegalArgumentException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = OrganizationAlreadyExistsException.class)
-    public ResponseEntity<Object> handleOrganizationAlreadyExistsException(OrganizationAlreadyExistsException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<Object> handleOrganizationAlreadyExistsException(IllegalArgumentException e) {
+        return new ResponseEntity<>("organization already exists in db!", HttpStatus.BAD_REQUEST);
     }
 }
