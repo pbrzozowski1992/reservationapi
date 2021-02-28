@@ -22,7 +22,8 @@ class OrganizationServiceTest {
     static class TestOrganizationServiceBeanProvider {
         @Bean
         public OrganizationService organizationService(OrganizationRepository organizationRepository) {
-            return new OrganizationService(organizationRepository);
+            return new OrganizationService(organizationRepository, new OrganizationTransformer(
+                    new OrganizationConferenceRoomTransformer()));
         }
     }
 
@@ -40,7 +41,7 @@ class OrganizationServiceTest {
                 .thenReturn(Optional.of(new Organization("org1", "description")));
 
         //when
-        Organization organization = organizationService.getOrganizationById("org1");
+        OrganizationDTO organization = organizationService.getOrganizationById("org1");
 
         //then
         assertEquals("org1", organization.getName());
@@ -67,7 +68,7 @@ class OrganizationServiceTest {
         Mockito.when(organizationRepository.save(organization)).thenReturn(organization);
 
         //when
-        Organization addedOrganization = organizationService.addOrganization(organization);
+        OrganizationDTO addedOrganization = organizationService.addOrganization(new OrganizationDTO(organization.getName(), organization.getDescription()));
 
         //then
         Mockito.verify(organizationRepository).save(organization);
@@ -84,7 +85,7 @@ class OrganizationServiceTest {
         //when
         //then
         assertThrows(OrganizationAlreadyExistsException.class, () -> {
-            organizationService.addOrganization(organization);
+            organizationService.addOrganization(new OrganizationDTO(organization.getName(), organization.getDescription()));
         });
         Mockito.verify(organizationRepository, Mockito.never()).save(organization);
     }

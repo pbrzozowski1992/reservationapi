@@ -1,26 +1,19 @@
 package pl.sdaacademy.reservationapi.organization;
 
-import pl.sdaacademy.reservationapi.conference_room.ConferenceRoom;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Entity
-public class Organization {
-
-    @Id
+public class OrganizationDTO {
     private String name;
     private String description;
+    private List<OrganizationConferenceRoomDTO> conferenceRooms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "organization")
-    private List<ConferenceRoom> conferenceRooms = new ArrayList<>();
+    public OrganizationDTO() {
 
-    public Organization() {
     }
 
-    public Organization(String name, String description) {
+    public OrganizationDTO(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -41,11 +34,11 @@ public class Organization {
         this.description = description;
     }
 
-    public List<ConferenceRoom> getConferenceRooms() {
+    public List<OrganizationConferenceRoomDTO> getConferenceRooms() {
         return conferenceRooms;
     }
 
-    public void setConferenceRooms(List<ConferenceRoom> conferenceRooms) {
+    public void setConferenceRooms(List<OrganizationConferenceRoomDTO> conferenceRooms) {
         this.conferenceRooms = conferenceRooms;
     }
 
@@ -53,12 +46,12 @@ public class Organization {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Organization that = (Organization) o;
-        return Objects.equals(name, that.name) && Objects.equals(description, that.description);
+        OrganizationDTO that = (OrganizationDTO) o;
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(conferenceRooms, that.conferenceRooms);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description);
+        return Objects.hash(name, description, conferenceRooms);
     }
 }
