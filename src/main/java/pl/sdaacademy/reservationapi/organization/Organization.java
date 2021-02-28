@@ -1,7 +1,9 @@
 package pl.sdaacademy.reservationapi.organization;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import pl.sdaacademy.reservationapi.conference_room.ConferenceRoom;
+
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,6 +12,9 @@ public class Organization {
     @Id
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "organization")
+    private List<ConferenceRoom> conferenceRooms;
 
     public Organization() {
     }
