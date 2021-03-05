@@ -1,5 +1,6 @@
 package pl.sdaacademy.reservationapi.conference_room;
 
+import org.aspectj.weaver.ast.Or;
 import pl.sdaacademy.reservationapi.organization.Organization;
 
 import javax.persistence.Entity;
@@ -22,6 +23,11 @@ public class ConferenceRoom {
 
     @ManyToOne
     private Organization organization;
+
+    public ConferenceRoom(String roomNumber) {
+        this.roomNumber = roomNumber;
+        this.organization = new Organization();
+    }
 
     public ConferenceRoom() {
 

@@ -9,6 +9,7 @@ import java.util.List;
 @RequestMapping("/conferencerooms")
 public class ConferenceRoomController {
 
+    private final static int PAGE_SIZE = 10;
     private final ConferenceRoomService conferenceRoomService;
 
     @Autowired
@@ -17,8 +18,8 @@ public class ConferenceRoomController {
     }
 
     @GetMapping
-    public List<ConferenceRoomDTO> getAllConferenceRooms() {
-        return conferenceRoomService.getConferenceRoomList();
+    public Envelop<List<ConferenceRoomDTO>> getAllConferenceRooms(@RequestParam(required = false, defaultValue = "1") int pageNumber) {
+        return conferenceRoomService.getConferenceRoomList(pageNumber, PAGE_SIZE);
     }
 
     @PostMapping
