@@ -1,7 +1,11 @@
 package pl.sdaacademy.reservationapi.organization;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.sdaacademy.reservationapi.validation.Add;
+import pl.sdaacademy.reservationapi.validation.Update;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +29,7 @@ public class OrganizationController {
     }
 
     @PostMapping
-    public OrganizationDTO addOrganization(@RequestBody OrganizationDTO organization) {
+    public OrganizationDTO addOrganization(@Validated(Add.class) @RequestBody OrganizationDTO organization) {
         return organizationService.addOrganization(organization);
     }
 
@@ -35,7 +39,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
-    public OrganizationDTO updateOrganization(@PathVariable String id, @RequestBody OrganizationDTO organization) {
+    public OrganizationDTO updateOrganization(@PathVariable String id, @Validated(Update.class) @RequestBody OrganizationDTO organization) {
         return organizationService.updateOrganization(id, organization);
     }
 }
