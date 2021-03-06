@@ -1,11 +1,27 @@
 package pl.sdaacademy.reservationapi.conference_room;
 
+import javax.validation.constraints.*;
+
 public class ConferenceRoomDTO {
+    @NotNull
+    @NotEmpty
+    @NotBlank
     private String name;
+
     private String roomNumber;
+
+    @NotNull
     private boolean available;
+
+    @Min(0)
+    @Max(10)
     private int level;
+
+    @Min(1)
+    @Max(20)
     private int capacity;
+
+    @NotNull
     private String organizationName;
 
     public ConferenceRoomDTO() {
