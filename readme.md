@@ -1,4 +1,4 @@
-# CRRS README file
+# CRRS
 
 ## Acceptance criteria
 

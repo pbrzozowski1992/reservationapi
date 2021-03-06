@@ -32,13 +32,14 @@ public class OrganizationController {
         return organizationService.addOrganization(organization);
     }
 
+    @PutMapping("/{name}")
+    public OrganizationDTO updateOrganization(@PathVariable String name, @Validated(Update.class) @RequestBody OrganizationDTO organization) {
+        return organizationService.updateOrganization(name, organization);
+    }
+
     @DeleteMapping("/{name}")
     public OrganizationDTO removeOrganization(@PathVariable String name) {
         return organizationService.removeOrganization(name);
     }
 
-    @PutMapping("/{name}")
-    public OrganizationDTO updateOrganization(@PathVariable String name, @Validated(Update.class) @RequestBody OrganizationDTO organization) {
-        return organizationService.updateOrganization(name, organization);
-    }
 }
