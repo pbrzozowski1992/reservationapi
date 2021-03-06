@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.sdaacademy.reservationapi.validation.Add;
 import pl.sdaacademy.reservationapi.validation.Update;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
