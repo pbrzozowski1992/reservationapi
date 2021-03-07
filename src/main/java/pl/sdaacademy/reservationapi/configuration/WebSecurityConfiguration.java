@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.sdaacademy.reservationapi.security.AuthenticationFilter;
+import pl.sdaacademy.reservationapi.security.AuthorizationFilter;
 import pl.sdaacademy.reservationapi.user.UserProvider;
 
 @EnableWebSecurity
@@ -34,13 +36,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().and();
+        http.csrf().disable().cors();
         http.authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .addFilter(new AuthenticationFilter(authenticationManager()))
+                .addFilter(new AuthorizationFilter(authenticationManager()));
         http.headers().frameOptions().disable();
     }
 
@@ -55,12 +58,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
-
-    //    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("u1").password("{noop}p1").roles("ADMIN")
-//                .and()
-//                .withUser("u2").password("{noop}p2").roles("ADMIN");
-//    }
 }
