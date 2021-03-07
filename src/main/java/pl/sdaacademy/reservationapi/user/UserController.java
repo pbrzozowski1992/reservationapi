@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User signUp(@RequestBody User user){
+    public UserDTO signUp(@RequestBody User user){
         return userService.addUser(user);
     }
 }

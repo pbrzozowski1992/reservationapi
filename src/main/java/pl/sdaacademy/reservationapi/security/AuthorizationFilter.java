@@ -14,14 +14,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
-    public AuthorizationFilter(AuthenticationManager authenticationManager) {
+
+    private final String authKey;
+    private final String authType;
+    private final String signInKey;
+
+    public AuthorizationFilter(AuthenticationManager authenticationManager,
+                               String authKey,
+                               String authType,
+                               String signInKey) {
         super(authenticationManager);
+        this.authKey = authKey;
+        this.authType = authType;
+        this.signInKey = signInKey;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer")) {
+        String header = request.getHeader(authKey);
+        if (header == null || !header.startsWith(authType)) {
             chain.doFilter(request, response);
             return;
         }
@@ -31,13 +42,14 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken proceedAuthentication(String header) {
-        String user = Jwts.parser().setSigningKey("secrete_info".getBytes())
-                .parseClaimsJws(header.replace("Bearer", ""))
-                .getBody()
-                .getSubject();
-        if (user != null) {
-            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        try {
+            String user = Jwts.parser().setSigningKey(signInKey.getBytes())
+                    .parseClaimsJws(header.replace(authType, ""))
+                    .getBody()
+                    .getSubject();
+            return user != null ? new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()) : null;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Token not valid!");
         }
-        return null;
     }
 }

@@ -22,8 +22,8 @@ public class UserProvider implements UserDetailsService {
         User user = userRepository.findByUsername(s).orElseThrow(()->{
             throw new NoSuchElementException("no user with provided name: " + s);
         });
-        org.springframework.security.core.userdetails.User springUser =
-                new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.emptyList());
-        return springUser;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                Collections.emptyList());
     }
 }
