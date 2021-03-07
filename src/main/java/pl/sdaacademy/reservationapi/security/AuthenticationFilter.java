@@ -52,7 +52,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        User user = userOptional.orElseThrow(()->{
+        User user = userOptional.<UsernameNotFoundException>orElseThrow(()->{
             throw new UsernameNotFoundException("user not authenticated!");
         });
         return authenticationManager.authenticate(

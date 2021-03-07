@@ -19,7 +19,7 @@ public class UserProvider implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(s).orElseThrow(()->{
+        User user = userRepository.findByUsername(s).<NoSuchElementException>orElseThrow(()->{
             throw new NoSuchElementException("no user with provided name: " + s);
         });
         return new org.springframework.security.core.userdetails.User(user.getUsername(),

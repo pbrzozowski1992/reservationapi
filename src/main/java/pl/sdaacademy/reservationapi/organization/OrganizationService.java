@@ -32,7 +32,7 @@ public class OrganizationService {
 
     public OrganizationDTO removeOrganization(String id) {
         Organization organization = organizationRepository.findById(id)
-                .orElseThrow(() -> {
+                .<NoOrganizationFoundException>orElseThrow(() -> {
                     throw new NoOrganizationFoundException(id);
                 });
         organizationRepository.delete(organization);
@@ -42,7 +42,7 @@ public class OrganizationService {
     public OrganizationDTO updateOrganization(String id, OrganizationDTO organizationUpdateDTO) {
         Organization organizationUpdate = organizationTransformer.toEntity(organizationUpdateDTO);
         Organization organizationToUpdate = organizationRepository.findById(id)
-                .orElseThrow(() -> {
+                .<NoOrganizationFoundException>orElseThrow(() -> {
                     throw new NoOrganizationFoundException(id);
                 });
         String newOrganizationDescription = organizationUpdate.getDescription();
@@ -54,7 +54,7 @@ public class OrganizationService {
 
     public OrganizationDTO getOrganizationById(String id) {
         return organizationTransformer.toDTO(organizationRepository.findById(id)
-                .orElseThrow(() -> {
+                .<NoOrganizationFoundException>orElseThrow(() -> {
                     throw new NoOrganizationFoundException(id);
                 }));
     }
